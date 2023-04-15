@@ -1,0 +1,29 @@
+{
+  "name": "smart_payroll",
+  "version": "1.0.0",
+  "description": "Full stack payroll management system.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adekunleoloduero/smart_payroll.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adekunleoloduero/smart_payroll/issues"
+  },
+  "homepage": "https://github.com/adekunleoloduero/smart_payroll#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^4.12.0"
+  }
+}
