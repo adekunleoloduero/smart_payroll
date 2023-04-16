@@ -53,7 +53,11 @@ const signin = async (req, res, next) => {
 
 
 const logout = async (req, res, next) => {
-    res.send('logout');
+    return res.clearCookie('access_token')
+    .status(200).json({
+        status: true,
+        message: 'Successfully logged out.' 
+    });
 }
 
 
