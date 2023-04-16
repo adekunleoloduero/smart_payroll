@@ -1,9 +1,6 @@
-function removePassword(userObject) {
+exports.removePassword = function(userObject) {
     const { password, ...others } = userObject;
     return others;
 }
 
-module.exports = {
-    removePassword
-}
 

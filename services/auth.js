@@ -26,29 +26,17 @@ const signup = async (payload) => {
         })
 
         //Don't send the password back
-        const result = passwordUtil.removePassword(user);
+        const userOutput = passwordUtil.removePassword(user);
         response = {
             statusCode: 201,
-            user: result
+            user: userOutput
         }
     }
     return response;
 }
 
 
-const sigin = async (payload) => {
-            
-}
-
-
-const logout = async () => {
-
-}
-
-
 module.exports = {
     signup,
-    sigin,
-    logout
 }
 
