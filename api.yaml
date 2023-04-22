@@ -1,0 +1,293 @@
+swagger: "2.0"
+
+#Info
+info:
+  title: EkoUNIMED Payroll Management System
+  description: This is the official api documentation for EkoUNIMED Payroll Management System.
+  version: "1.0.0"
+  contact:
+    email: dnexteinstein2@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://apache.org/
+
+servers:
+    -url: http://localhost:5000
+
+schemes: [http, https]
+
+# servers:
+# - url: '{protocol}://{environment}:{port}'
+#   variables:
+#     protocol:
+#     default: http
+#       enum:
+#         - http
+#         - https
+#     port:
+#       default: 5000
+#     environment:
+#       default: localhost
+#       enum:
+#         - localhost
+
+paths:
+  # Register a new user
+  /api/auth/signup:
+    post:
+      summary: Signup new user
+      description: It saves a new user information to the database.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - name: User Info
+        in: body
+        schema:
+          properties:
+            firstName:
+              type: string
+              required: true
+            lastName:
+              type: string
+              required: true
+            email:
+              type: string
+              required: true
+            password:
+              type: string
+              required: true
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              email:
+                type: string
+                format: email
+              firstName:
+                type: string
+              lastName:
+                type: string
+              role: 
+                type: string
+                default: USER
+              resetToken:
+                type: string
+              resetTokenExpiration:
+                type: string
+                format: date
+              CreatedAt:
+                type: string
+                format: date
+        403:
+          description: Forbidden
+          schema:
+            type: string
+            example: This email is already registered
+        500:
+          description: Server Error
+          schema:
+            type: string
+            example: Internal Server Error
+
+  # Login
+  /api/auth/signin:
+    post:
+      summary: Signin a registered user
+      description: This route signs in a registered user if the correct credentials are provided.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - name: User Credentials
+        in: body
+        schema:
+          properties:
+            email:
+              type: string
+              required: true
+            password:
+              type: string
+              required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: object
+            properties:
+              status: 
+                type: boolean
+                default: true
+              user:
+                $ref: "#/components/schemas/userWithoutPassword"
+          headers: 
+            Set-Cookie:
+              description: Successfully authenticated. The session ID is returned in a cookie named `access_token`. You need to include this cookie in subsequent requests.
+              schema: 
+                type: string
+                example: access_token=abcde12345; Path=/; HttpOnly
+        400:
+          description: Bad Request
+          schema:
+            type: string
+            example: Invalid email
+        500:
+          description: Server Error
+          schema:
+            type: string
+            example: Internal Server Error
+  
+  # Logout
+  /api/auth/logout:
+    post:
+      summary: Logout a user
+      description: Logs out a user and clears user session from cookies storage on the client.
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: string
+            example: Sucessfully logged out
+        500:
+          description: Server Error
+          schema:
+            type: string
+            example: Internal Server Error
+
+  # Request password reset link
+  /api/auth/reset-password:
+    post:
+      summary: Get password reset url
+      description: Sends a password reset link to the email provided. Users can follow the link sent to reset or change their password. The link is set to expire in 30 minutes.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - name: Email
+        in: body
+        schema:
+          properties:
+            email:
+              type: string
+              required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: object
+            properties:
+              status: 
+                type: boolean
+                default: true
+              email:
+                type: string
+                format: email
+              resetLink:
+                type: string
+                example: http://host:port/api/auth/change-password/userId/resetToken
+        400:
+          description: Bad Request
+          schema:
+            type: string
+            example: Invalid email
+        500:
+          description: Server Error
+          schema:
+            type: string
+            example: Internal Server Error
+
+  # Change passwor
+  /api/auth/change-password/{userId}/{resetToken}:
+    patch:
+      summary: Change passsword
+      description: Validates user email, userId and resetToken. Then it replaces current password mapped to the user in the database with the new password being provided. This endpoint is described by the password reset link that is sent to the user email after calling /api/auth/reset-password and is expected to be called after the former has returned successfully.
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - name: userId
+        in: path
+        schema:
+          type: string
+      - name: resetToken
+        in: path
+        schema:
+          type: string
+      - name: Payload
+        in: body
+        schema:
+          properties:
+            email:
+              type: string
+              required: true
+            password:
+              type: string
+              required: true
+            confirmPassword:
+              type: string
+              required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: object
+            properties:
+              status: 
+                type: boolean
+                default: true
+              user:
+                $ref: "#/components/schemas/userWithoutPassword"
+        400:
+          description: Bad Request
+          schema:
+            type: string
+            example: Invalid email
+        403:
+          description: Forbidden
+          schema:
+            type: string
+            example: Invalid or expired link
+        500:
+          description: Server Error
+          schema:
+            type: string
+            example: Internal Server Error
+
+        
+
+
+components:
+  schemas:
+    userWithoutPassword:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role: 
+          type: string
+          default: USER
+        resetToken:
+          type: string
+        resetTokenExpiration:
+          type: string
+          format: date
+        CreatedAt:
+          type: string
+          format: date
+
+      
