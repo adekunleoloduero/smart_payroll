@@ -1,3 +1,5 @@
+const { BASE_URL } = require('./stage');
+
 require('dotenv').config();
 
 
@@ -8,7 +10,8 @@ const config = {
     GOOGLE_MAIL_PASSWORD: process.env.GOOGLE_MAIL_PASSWORD,
     GOOGLE_0AUTH2_CLIENT_ID: process.env.GOOGLE_0AUTH2_CLIENT_ID,
     GOOGLE_0AUTH2_CLIENT_SECRET: process.env.GOOGLE_0AUTH2_CLIENT_SECRET,
-    GOOGLE_0AUTH2_REFRESH_TOKEN: process.env.GOOGLE_0AUTH2_REFRESH_TOKEN
+    GOOGLE_0AUTH2_REFRESH_TOKEN: process.env.GOOGLE_0AUTH2_REFRESH_TOKEN,
+    BASE_URL: process.env.LOCAL_BASE_URL
 }
 
 
