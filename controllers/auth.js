@@ -17,8 +17,9 @@ const signup = async (req, res, next) => {
         } else if (response.statusCode == 201) {
             return res.status(response.statusCode).json(response.user);
         } 
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
+        next(error);
     }
 }
 
@@ -61,8 +62,9 @@ const signin = async (req, res, next) => {
             } 
         ).
         json({ status: true, user: userOutput });
-    } catch(err) {
-        console.log(err);
+    } catch(error) {
+        console.log(error);
+        next(error);
     }
 }
 
@@ -71,7 +73,7 @@ const logout = async (req, res, next) => {
     return res.clearCookie('access_token')
     .status(200).json({
         status: true,
-        message: 'Successfully logged out.' 
+        message: 'Successfully logged out' 
     });
 }
 
@@ -126,6 +128,7 @@ const requestPasswordResetLink = async (req, res, next) => {
         });
         return res.status(200).json({ status: true, email: user.email, resetLink: link });
     } catch(error) {
+        console.log(error);
         next(error);
     }
 }
@@ -152,7 +155,8 @@ const changePassword = async (req, res, next) => {
         }
         return res.status(200).json({ status: true, user: response });
     } catch (error) {
-        console.log(error);        
+        console.log(error);  
+        next(error)      ;
     }
 }
 
