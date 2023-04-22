@@ -10,7 +10,7 @@ const config = {
     GOOGLE_0AUTH2_CLIENT_ID: process.env.GOOGLE_0AUTH2_CLIENT_ID,
     GOOGLE_0AUTH2_CLIENT_SECRET: process.env.GOOGLE_0AUTH2_CLIENT_SECRET,
     GOOGLE_0AUTH2_REFRESH_TOKEN: process.env.GOOGLE_0AUTH2_REFRESH_TOKEN,
-    BASE_URL: 'https://ekounimed-payroll-test.onrender.com/'
+    BASE_URL: process.env.STAGING_BASE_URL
 }
 
 
