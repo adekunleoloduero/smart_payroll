@@ -87,7 +87,7 @@ const requestPasswordResetLink = async (req, res, next) => {
         
         resetToken = token; //Store reset token
         resetTokenExpiration = new Date(Date.now() + 60 * 30  * 1000); //Set token to expire in 30 minutes
-        const link = `http://localhost:${config.PORT}/api/auth/change-password/${user.id}/${token}`;
+        const link = `${config.BASE_URL}:${config.PORT}/api/auth/change-password/${user.id}/${token}`;
 
         let name;
         if (user.firstName == null) {
