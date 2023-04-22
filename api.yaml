@@ -12,7 +12,7 @@ info:
     url: https://apache.org/
 
 servers:
-    -url: http://localhost:5000
+    -url: https://ekounimed-payroll-test.onrender.com/
 
 schemes: [http, https]
 
