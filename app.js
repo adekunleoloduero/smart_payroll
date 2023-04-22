@@ -1,9 +1,15 @@
 const express = require('express');
 const routes = require('./routes/index');
 const cookieParser = require('cookie-parser');
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerJsDoc = YAML.load('./api.yaml');
 
 
 const app = express();
+
+//Specify path to swagger documentation
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDoc));
 
 
 //Body parser middlewares
@@ -26,19 +32,19 @@ app.get('/', (req, res) => {
 
 //Error handling middleware
 app.use((error, req, res, next) => {
-    const errStatus = err.status || 500;
-    const errMsg = err.message || 'Internal Server Error.';
+    const errStatus = error.status || 500;
+    const errMsg = error.message || 'Internal Server Error.';
     console.log({
         status: errStatus,
         message: errMsg,
-        stack: process.env.NODE_ENV === 'development' ? err.stack : {}
+        stack: process.env.NODE_ENV === 'development' ? error.stack : {}
     })
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).send('Internal Server Error');
 });
 
 //Undefined routes
 app.get('*', (req, res) => {
-    res.status(404).json({ message: 'Not Found' });
+    res.status(404).send('Not Found');
 });
 
 

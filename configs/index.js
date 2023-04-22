@@ -1,6 +1,6 @@
 const development = require('./dev');
 const production = require('./prod');
-const testing = require('./test');
+const staging = require('./stage');
 require('dotenv').config();
 
 let env = process.env.NODE_ENV;
@@ -8,7 +8,7 @@ let env = process.env.NODE_ENV;
 const config = {
     development,
     production,
-    testing
+    staging
 }
 
 module.exports = config[env];

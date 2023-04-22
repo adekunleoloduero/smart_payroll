@@ -6,6 +6,7 @@ const passwordUtil = require('../utils/password');
 
 const signup = async (payload) => {
     let response;
+
     //Check whether user is already registered
     const exitingUser = await prisma.user.findUnique({
         where: {
@@ -16,7 +17,7 @@ const signup = async (payload) => {
     if (exitingUser) {
         response = {
             statusCode: 403,
-            message: "Email already registered."
+            message: "This email is already registered"
         }
     } else {
         const hashedPassword = await passwordUtil.getHashedPassword(payload.password);
@@ -53,9 +54,6 @@ const changePassword = async (data) => {
         return false
     }
 
-    // user.password = data.password;
-    // user.resetToken = "";
-    // user.resetTokenExpiration = new Date(Date.now());
     const hashedPassword = await passwordUtil.getHashedPassword(data.password); //Encrypt password before saving
     const updatedUser = await prisma.user.update({
         where: {

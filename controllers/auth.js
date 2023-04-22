@@ -13,7 +13,7 @@ const signup = async (req, res, next) => {
     try {
         const response = await authService.signup(payload);
         if (response.statusCode == 403) {
-            return res.status(response.statusCode).json({ message: response.message });
+            return res.status(response.statusCode).send(response.message);
         } else if (response.statusCode == 201) {
             return res.status(response.statusCode).json(response.user);
         } 
@@ -35,19 +35,13 @@ const signin = async (req, res, next) => {
         })
         
         if (!user) {
-            return res.status(400).json({
-                status: false,
-                message: 'Invalid email'
-            });
+            return res.status(400).send('Invalid email');
         }
 
         //Validate password
         const passwordIsValid = await passwordUtil.validatePassword(payload.password, user.password);
         if (!passwordIsValid) {
-            return res.status(400).json({
-                status: false,
-                message: 'Invalid password'
-            });
+            return res.status(400).send('Invalid password');
         }
 
         const userOutput = await passwordUtil.returnUserWithoutPassword(user);
@@ -71,10 +65,7 @@ const signin = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     return res.clearCookie('access_token')
-    .status(200).json({
-        status: true,
-        message: 'Successfully logged out' 
-    });
+    .status(200).send('Successfully logged out');
 }
 
 
@@ -90,10 +81,7 @@ const requestPasswordResetLink = async (req, res, next) => {
         });
     
         if (!user) {
-          return res.status(400).json({ 
-                status: false, 
-                message: "Invalid email"
-            });
+          return res.status(400).send('Invalid email');
         }
     
         
@@ -138,7 +126,7 @@ const changePassword = async (req, res, next) => {
     const { email, password, confirmPassword } = req.body;
 
     if (password != confirmPassword) {
-        return res.status(400).json({ status: false, message: "Password confirmation failed" });
+        return res.status(400).send("Password confirmation failed");
     }
 
     const data = {
@@ -151,7 +139,7 @@ const changePassword = async (req, res, next) => {
     try {
         const response = await authService.changePassword(data);
         if (!response) {
-            return res.status(400).json({ status: false, user: null , message: "Invalid or expired link"});
+            return res.status(403).send("Invalid or expired link");
         }
         return res.status(200).json({ status: true, user: response });
     } catch (error) {
